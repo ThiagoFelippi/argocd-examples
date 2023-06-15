@@ -1,0 +1,53 @@
+crds:
+  install: true
+
+## Argo Configs
+configs:
+  cm:
+    url: https://argocd.<dominio>
+
+  # Caso queira definir os clusters que vão se conectar ao ArgoCD
+  # Irei fazer manual depois, então deixarei vazio
+  clusterCredentials: []
+
+# Alta disponibilidade utilizando Redis
+redis-ha:
+  enabled: true
+
+  # Habilitar exporter do Redis para o Prometheus
+  exporter:
+    enabled: true
+
+  # Para salvar as informações do Redis em um Persistent Volume
+  persistentVolume:
+    enabled: true
+
+server:
+  nodeSelector:
+    iam.gke.io/gke-metadata-server-enabled: "true"
+
+  # Pode remover annotation, caso não use GKE.
+  serviceAccount:
+    annotations:
+      iam.gke.io/gcp-service-account: argocd@production-12345.iam.gserviceaccount.com
+
+  ingress:
+    enabled: true
+
+    annotations:
+      external-dns.alpha.kubernetes.io/target: <ip_ingress_controller>
+      external-dns.alpha.kubernetes.io/ttl: "120"
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+
+    ingressClassName: "nginx"
+
+    hosts:
+      - argocd.<dominio>
+
+    tls:
+      - hosts:
+          - argocd.<dominio>
+        secretName: argocd-secret # do not change, this is provided by Argo CD
