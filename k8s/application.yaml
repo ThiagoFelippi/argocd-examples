@@ -9,7 +9,7 @@ spec:
   info:
     - name: ""
       value: ""
-  project: default # pocs-production
+  project: default
   source:
     path: test
     repoURL: <url_do_repo>

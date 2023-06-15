@@ -1,13 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: pocs-production
+  name: infra-qa-stage
 spec:
   clusterResourceWhitelist:
     - group: "*"
       kind: "*"
   destinations:
-    - namespace: pocs
-      server: https://kubernetes.default.svc
+    - namespace: infra
+      server: <controlplane_url>
+    # - namespace: kube-system
+    #   server: <controlplane_url>
   sourceRepos:
-    - https://gitlab.com/agriness/squad-ranchers/application-manifests.git
+    # Modificar para a URL do seu repositório
+    - https://gitlab.com/minha_empresa/application-manifests.git
+    - https://helm.releases.hashicorp.com
