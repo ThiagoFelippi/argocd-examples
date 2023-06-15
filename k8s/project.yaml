@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: pocs-production
+spec:
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  destinations:
+    - namespace: pocs
+      server: https://kubernetes.default.svc
+  sourceRepos:
+    - https://gitlab.com/agriness/squad-ranchers/application-manifests.git

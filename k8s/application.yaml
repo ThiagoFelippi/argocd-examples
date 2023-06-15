@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: test-application
+spec:
+  destination:
+    namespace: pocs
+    server: https://kubernetes.default.svc
+  info:
+    - name: ""
+      value: ""
+  project: default # pocs-production
+  source:
+    path: test
+    repoURL: <url_do_repo>
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

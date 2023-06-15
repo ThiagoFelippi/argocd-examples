@@ -49,5 +49,5 @@ server:
 
     tls:
       - hosts:
-          - argocd.<dominio>
-        secretName: argocd-secret # do not change, this is provided by Argo CD
+          - <dominio>
+        secretName: dev-certs # do not change, this is provided by Argo CD
