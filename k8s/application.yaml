@@ -4,8 +4,8 @@ metadata:
   name: test-application
 spec:
   destination:
-    namespace: pocs
-    server: https://kubernetes.default.svc
+    namespace: one-poc
+    server: <url_do_controlplane>
   info:
     - name: ""
       value: ""
@@ -14,6 +14,82 @@ spec:
     path: test
     repoURL: <url_do_repo>
     targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: test-application-external-cluster
+spec:
+  destination:
+    namespace: two-pocs
+    server: <url_do_controlplane>
+  project: default
+  source:
+    path: test
+    repoURL: <url_do_repo>
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: test-application-new-homolog
+spec:
+  destination:
+    namespace: three-poc
+    server: <url_do_controlplane>
+  project: default
+  source:
+    path: test2
+    repoURL: <url_do_repo>
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vault-external
+spec:
+  project: infra-qa-stage
+  sources:
+    - repoURL: <url_do_repo>
+      ref: values
+    - repoURL: https://helm.releases.hashicorp.com
+      chart: vault
+      targetRevision: 0.24.1
+      helm:
+        releaseName: vault
+        valueFiles:
+          - $values/helm/qa-stage/vault/values.yaml
+        parameters:
+          - name: "server.dev.enabled"
+            value: "true"
+          - name: "server.standalone.enabled"
+            value: "false"
+  destination:
+    server: <url_do_controlplane>
+    namespace: infra
+  ignoreDifferences:
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+      jqPathExpressions:
+        - .webhooks[]?.clientConfig.caBundle
   syncPolicy:
     automated:
       prune: true
