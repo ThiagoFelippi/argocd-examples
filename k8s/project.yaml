@@ -8,10 +8,26 @@ spec:
       kind: "*"
   destinations:
     - namespace: infra
-      server: <controlplane_url>
-    # - namespace: kube-system
-    #   server: <controlplane_url>
+      server: <url_controlplane>
   sourceRepos:
     # Modificar para a URL do seu repositório
-    - https://gitlab.com/minha_empresa/application-manifests.git
+    - https://gitlab.com/<minha_empresa>/application-manifests.git
+    - https://helm.releases.hashicorp.com
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: infra
+spec:
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  destinations:
+    - namespace: infra
+      server: <url_controlplane>
+    - namespace: infra
+      server: <url_controlplane>
+  sourceRepos:
+    # Modificar para a URL do seu repositório
+    - https://gitlab.com/<minha_empresa>/application-manifests.git
     - https://helm.releases.hashicorp.com
